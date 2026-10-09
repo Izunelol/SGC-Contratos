@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Src\App\Http\Exceptions\Exemplo;
+namespace Src\App\Http\Exceptions\Contrato;
 
 use Src\App\Http\Exceptions\DomainException;
 

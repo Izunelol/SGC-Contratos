@@ -7,12 +7,11 @@ use Src\App\Models\Contrato;
 
 interface IContratoService
 {
-    public function create(Contrato $exemplo): Contrato;
-    public function update(Contrato $exemplo): Contrato;
+    public function create(array $data): Contrato;
+    public function update(string $id, array $data): Contrato;
     public function delete(string $id): bool;
     public function getAll(): array;
     public function getById(string $id): ?Contrato;
-    //public function getBySei(string $sei): ?Contrato;
     public function count(): int;
 }
 

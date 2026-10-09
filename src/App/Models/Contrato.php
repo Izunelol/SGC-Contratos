@@ -48,6 +48,25 @@ Class Contrato
         $this->setStatus($status);
         $this->setUpdated_at($updated_at);
     }
+
+    public static function fromArray(array $data): self
+    {
+        return new self(
+            $data['id'] ?? null,
+            $data['fornecedor'],
+            $data['sei'] ?? null,
+            $data['startGov'] ?? null,
+            $data['contrato'] ?? null,
+            $data['objeto'] ?? null,
+            $data['vigencia_inico'] ?? null,
+            $data['vigencia_fim'] ?? null,
+            $data['created_at'] ?? null,
+            $data['status'] ?? null,
+            $data['updated_at'] ?? null,
+            
+            
+        );
+    }
     
     public function setId(?string $id): void
     {
@@ -159,7 +178,7 @@ Class Contrato
         return $this->updated_at;
     }
 
-    public function setUpdated_at($updated_at): void
+    public function setUpdated_at(?string $updated_at): void
     {
         $this->updated_at = $updated_at;
     }
