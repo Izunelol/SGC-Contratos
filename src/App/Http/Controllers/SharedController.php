@@ -61,10 +61,12 @@ class SharedController
             'activeDashboard'  => $activePage === 'dashboard',
             'activeAdmin'      => $activePage === 'admin',
             'activeExemplo'    => $activePage === 'exemplo',
+            'activeContrato'   => $activePage === 'contrato',
             'activeConfig'     => $activePage === 'configuracoes',
             // [HOOK_SIDEBAR_VARS]
             'urlDashboard'     => Url::path('/home'),
             'urlExemplo'       => Url::path('/exemplo'),
+            'urlContrato'       => Url::path('/contrato'),
             'urlAdmin'         => Url::path('/admin'),
             'urlConfig'        => Url::path('/configuracoes'),
             'urlLogout'        => Url::path('/logout'),

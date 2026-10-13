@@ -4,11 +4,13 @@ $isAdmin        = $isAdmin ?? false;
 $activeDashboard = $activeDashboard ?? false;
 $activeAdmin    = $activeAdmin ?? false;
 $activeExemplo  = $activeExemplo ?? false;
+$activeContrato  = $activeContrato ?? false;
 $activeConfig   = $activeConfig ?? false;
 
 $urlDashboard = $urlDashboard ?? '';
 $urlAdmin     = $urlAdmin ?? '';
 $urlExemplo   = $urlExemplo ?? '';
+$urlContrato  = $urlContrato ?? ''; 
 $urlConfig    = $urlConfig ?? '';
 $urlLogout    = $urlLogout ?? '';
 
@@ -52,12 +54,21 @@ $linkInactive = $linkBase . ' text-slate-700 hover:bg-slate-100 hover:text-slate
             <?php endif; ?>
 
             <!-- TODO: substitua este item pelo(s) módulo(s) do seu projeto -->
-            <!-- [HOOK_SIDEBAR] -->
+            <!-- [HOOK_SIDEBAR] -->
+
             <li>
                 <a href="<?= htmlspecialchars($urlExemplo) ?>"
                     class="<?= $activeExemplo ? $linkActive : $linkInactive ?>">
                     <i class="fa-solid fa-layer-group text-base"></i>
                     <span>Exemplo</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="<?= htmlspecialchars($urlContrato) ?>"
+                    class="<?= $activeContrato ? $linkActive : $linkInactive ?>">
+                    <i class="fa-solid fa-layer-group text-base"></i>
+                    <span>Contratos</span>
                 </a>
             </li>
         </ul>

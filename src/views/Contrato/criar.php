@@ -20,6 +20,7 @@ $inputClass = 'mt-1 block w-full rounded-xl border border-slate-200 px-3 py-2 te
     <div class="rounded-2xl border border-slate-200 bg-white p-6">
         <form method="POST" action="<?= $urlSalvar ?>">
             <?= csrf() ?>
+            <input type="hidden" name="status" value="1">
 
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div class="sm:col-span-2">

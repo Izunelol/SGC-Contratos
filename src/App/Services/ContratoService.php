@@ -29,7 +29,7 @@ class ContratoService implements IContratoService
             'vigencia_inico' => $data['vigencia_inico'],
             'vigencia_fim' => $data['vigencia_fim'],
             'created_at' =>$agora,
-            'status' => false,
+            'status' => $data['status'],
             'updated_at' => $agora,
             
             

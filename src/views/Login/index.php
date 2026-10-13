@@ -55,7 +55,7 @@
     <div class="flex min-h-[220px] flex-1 items-center justify-center bg-gradient-to-br from-slate-900 to-slate-700 px-4 py-10 text-center text-white">
         <div>
             <span class="block text-sm tracking-[0.2em] text-slate-300">BEM-VINDO AO</span>
-            <h2 class="mt-2 text-3xl font-bold sm:text-4xl">Projeto</h2>
+            <h2 class="mt-2 text-3xl font-bold sm:text-4xl">SISTEMA DE MONITORAMENTO DE CONTRATOS</h2>
         </div>
     </div>
 </div>

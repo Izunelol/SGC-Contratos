@@ -1,16 +1,17 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
-CREATE DATABASE IF NOT EXISTS `meu_projeto_db`
+CREATE DATABASE IF NOT EXISTS `db_contratos`
   DEFAULT CHARACTER SET utf8mb4
   COLLATE utf8mb4_0900_ai_ci;
 
-USE `meu_projeto_db`;
+USE `db_contratos`;
 
 -- Remove todas as tabelas primeiro (evita conflito de FK ao recriar com tipos diferentes)
 DROP TABLE IF EXISTS `tb_logs_auditoria`;
 DROP TABLE IF EXISTS `tb_exemplo`;
 DROP TABLE IF EXISTS `tb_usuarios`;
 DROP TABLE IF EXISTS `tb_perfis`;
+DROP TABLE IF EXISTS `tb_contrato`;
 
 -- 1. Perfis de usuário
 CREATE TABLE `tb_perfis` (
@@ -64,5 +65,22 @@ CREATE TABLE `tb_exemplo` (
   `updated_at`  datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `tb_contrato`(
+
+  `id`              char(36) NOT NULL, 
+  `fornecedor`      varchar(150) NOT NULL,
+  `sei`             varchar(150) NOT NULL,
+  `startGov`        varchar(150) DEFAULT NULL,
+  `contrato`        varchar(150) DEFAULT NULL,
+  `objeto`          text(500) NOT NULL,
+  `vigencia_inico`  date NOT NULL,
+  `vigencia_fim`    date NOT NULL,
+  `created_at`      datetime DEFAULT CURRENT_TIMESTAMP,
+  `status`          tinyint(1) DEFAULT 1,
+  `updated_at`      datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 SET FOREIGN_KEY_CHECKS = 1;

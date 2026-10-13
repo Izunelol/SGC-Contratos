@@ -16,8 +16,8 @@ class ContratoRequest extends Request
             'startGov'    => ['nullable', 'string'],
             'contrato'    => ['nullable', 'string'],
             'objeto'    => ['required', 'string'],
-            'vigencia_inico'    => ['required', 'date', 'dateFormat:d-m-Y'],
-            'vigencia_fim'    => ['required', 'date','dateFormat:d-m-Y' ],
+            'vigencia_inico'    => ['required', 'date', 'dateFormat:Y-m-d'],
+            'vigencia_fim'    => ['required', 'date','dateFormat:Y-m-d' ],
             'status'    => ['required', 'boolean'],
         ];
     }

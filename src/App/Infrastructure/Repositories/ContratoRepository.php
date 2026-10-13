@@ -30,7 +30,7 @@ Class ContratoRepository implements IContratoRepository
         $stmt->bindValue(':sei', $contrato->getSei());
         $stmt->bindValue(':startGov', $contrato->getStartGov());
         $stmt->bindValue(':contrato', $contrato->getContrato());
-        $stmt->bindValue(':objeto', $contrato->getContrato());
+        $stmt->bindValue(':objeto', $contrato->getObjeto());
         $stmt->bindValue(':vigencia_inico', $contrato->getVigencia_inico());
         $stmt->bindValue(':vigencia_fim', $contrato->getVigencia_fim());
         $stmt->bindValue(':created_at', $contrato->getCreated_at());
@@ -56,7 +56,7 @@ Class ContratoRepository implements IContratoRepository
 
     public function getAll(): array
     {
-        $sql = 'SELECT id, fornecedor, sei, objeto, vigencia_inico, vigencia_fim,  status FROM tb_contrato ORDER BY id DESC';
+        $sql = 'SELECT id, fornecedor, sei, startGov, contrato, objeto, vigencia_inico, vigencia_fim, status FROM tb_contrato ORDER BY id DESC';
         $stmt = $this->conn->query($sql);
         $itens = [];
 
