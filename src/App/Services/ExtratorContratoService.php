@@ -93,13 +93,14 @@ class ExtratorContratoService implements IExtratorContratoService
 
             Campos a extrair:
             - "fornecedor": razão social da empresa CONTRATADA (quem fornece o serviço ou o produto),
-            com o CNPJ se estiver no texto. Não confunda com o órgão contratante.
+            somente o nome, SEM o CNPJ, sem endereço e sem expressões como "inscrita no CNPJ".
+             Não confunda com o órgão contratante.
             - "sei": número do processo SEI.
             - "startGov": número do processo ou registro no StartGov.
-            - "contrato": número do contrato (ex.: 012/2026).
+            - "contrato": número do contrato (ex.: 012/2026 ou 126A).
             - "objeto": resumo do objeto do contrato, em até 500 caracteres.
-            - "vigencia_inico": data de início da vigência, no formato AAAA-MM-DD.
-            - "vigencia_fim": data de fim da vigência, no formato AAAA-MM-DD.
+            - "vigencia_inico": data de início da vigência, no formato AAAA-MM-DD, (exemplo: 2026-11-03), nunca deve ser fora desse formato.
+            - "vigencia_fim": data de fim da vigência, no formato AAAA-MM-DD, (exemplo: 2026-11-03), nunca deve ser fora desse formato.
 
             Formato da resposta (use exatamente estas chaves):
             {"fornecedor": null, "sei": null, "startGov": null, "contrato": null, "objeto": null, "vigencia_inico": null, "vigencia_fim": null}
@@ -134,9 +135,63 @@ class ExtratorContratoService implements IExtratorContratoService
     public function decodificarJson(string $resposta): array
     {
 
-        $normalizar = trim($resposta);
-         
-    
+        $texto = trim($resposta);
+        $respostaNormalizado = trim(preg_replace(['/```json/','/```/'],'',$texto));
+        $respostaDados = json_decode($respostaNormalizado,true);
+        
+        if(!is_array($respostaDados))
+        {
+            throw new ExtracaoContratoException('Falha ao obter os dados do contrato. Tente novamente ou preencha os campos manualmente.');
+        
+        }
+
+        return $respostaDados;
+    }
+
+    public function paraTexto(mixed $valor): ?string 
+    {
+        if (!(is_string($valor) || is_int($valor) || is_float($valor)))
+        {
+            $dado = null;
+            return $dado;
+        }
+
+        $dado = trim((string) $valor); 
+        $verificacao = strtolower($dado);
+
+        if($dado === "" || $verificacao === "null")
+        {
+            $dado = null;
+            return $dado;
+        }
+
+        return $dado;
+    }
+
+    public function paraData(mixed $valor): ?string
+    {
+        $texto = $this->paraTexto($valor);
+        if($texto === null)
+        {
+            return null;
+        }
+
+        $formatos =['Y-m-d','d/m/Y'];
+
+        foreach ($formatos as $formato)
+        {
+            $data = date_create_from_format($formato, $texto);
+            if($data === false)
+            {
+                continue;
+            }
+            $dataVerificacao = $data->format($formato);
+            if($dataVerificacao === $texto)
+            {
+                return $data->format('Y-m-d');
+            }
+        }
+        return null;
     }
 
 }
