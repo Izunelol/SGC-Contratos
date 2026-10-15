@@ -9,6 +9,7 @@ interface IExtratorContratoService
 {
 
     public function extrair(string $caminhoPDF): array;
+    public function extrairDeUpload(array $arquivo): array;
 
 }
 

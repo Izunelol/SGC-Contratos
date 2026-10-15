@@ -3,6 +3,7 @@
 /**
  * @var string $voltarUrl
  * @var string $urlSalvar
+ * @var string $urlExtrair
  */
 
 $inputClass = 'mt-1 block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100';
@@ -17,10 +18,41 @@ $inputClass = 'mt-1 block w-full rounded-xl border border-slate-200 px-3 py-2 te
         <h1 class="mt-2 text-2xl font-semibold text-slate-900">Novo Contrato</h1>
     </div>
 
+    <!-- Importar de PDF: formulário separado (formulários não podem ser aninhados) -->
+    <div class="rounded-2xl border border-slate-200 bg-white p-6">
+        <form method="POST" action="<?= $urlExtrair ?>" enctype="multipart/form-data" id="form-extrair">
+            <?= csrf() ?>
+
+            <h2 class="text-base font-semibold text-slate-900">
+                <i class="fa-solid fa-file-pdf mr-1 text-slate-500"></i> Importar de PDF
+            </h2>
+            <p class="mt-1 text-sm text-slate-600">
+                Envie o contrato em PDF para preencher o formulário automaticamente.
+                Confira sempre os dados antes de salvar.
+            </p>
+
+            <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-start">
+                <div class="flex-1">
+                    <label for="arquivo" class="sr-only">Arquivo PDF</label>
+                    <input type="file" id="arquivo" name="arquivo" accept="application/pdf,.pdf" required
+                        class="block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-700 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-slate-700 hover:file:bg-slate-200">
+                    <?= old_error('arquivo') ?>
+                    <p class="mt-1 text-xs text-slate-500">Somente PDF com texto, até 5 MB.</p>
+                </div>
+
+                <button type="submit" id="btn-extrair"
+                    class="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60">
+                    <i class="fa-solid fa-wand-magic-sparkles" id="icone-extrair"></i>
+                    <span id="texto-extrair">Extrair dados</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Formulário de cadastro -->
     <div class="rounded-2xl border border-slate-200 bg-white p-6">
         <form method="POST" action="<?= $urlSalvar ?>">
             <?= csrf() ?>
-            <input type="hidden" name="status" value="1">
 
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div class="sm:col-span-2">
@@ -93,3 +125,21 @@ $inputClass = 'mt-1 block w-full rounded-xl border border-slate-200 px-3 py-2 te
         </form>
     </div>
 </div>
+
+<script>
+    // A extração pode levar vários segundos: bloqueia o botão para evitar envio duplo.
+    (function () {
+        var form = document.getElementById('form-extrair');
+        if (!form) return;
+
+        form.addEventListener('submit', function () {
+            var botao = document.getElementById('btn-extrair');
+            var icone = document.getElementById('icone-extrair');
+            var texto = document.getElementById('texto-extrair');
+
+            botao.disabled = true;
+            icone.className = 'fa-solid fa-spinner fa-spin';
+            texto.textContent = 'Processando…';
+        });
+    })();
+</script>

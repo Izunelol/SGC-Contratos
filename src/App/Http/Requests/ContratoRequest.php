@@ -10,7 +10,6 @@ class ContratoRequest extends Request
     public function rules(): array
     {
         return [
-            'id'        => ['nullable', 'string'],
             'fornecedor'    => ['required', 'string'],
             'sei'    => ['required', 'string'],
             'startGov'    => ['nullable', 'string'],
@@ -18,7 +17,6 @@ class ContratoRequest extends Request
             'objeto'    => ['required', 'string'],
             'vigencia_inico'    => ['required', 'date', 'dateFormat:Y-m-d'],
             'vigencia_fim'    => ['required', 'date','dateFormat:Y-m-d' ],
-            'status'    => ['required', 'boolean'],
         ];
     }
 

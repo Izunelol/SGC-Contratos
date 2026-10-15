@@ -7,8 +7,10 @@ use Src\App\Infrastructure\IRepositories\IContratoRepository;
 use Src\App\Infrastructure\Repositories\ContratoRepository;
 use Src\App\Services\Auditoria\AuditoriaContrato;
 use Src\App\Services\ContratoService;
+use Src\App\Services\ExtratorContratoService;
 use Src\App\Services\IServices\IAuditoriaService;
 use Src\App\Services\IServices\IContratoService;
+use Src\App\Services\IServices\IExtratorContratoService;
 use Src\Core\Container;
 use Src\Core\Database;
 
@@ -31,12 +33,16 @@ Container::set(IContratoService::class, static function () {
         Container::get(IContratoRepository::class)
     );
 });
+   Container::set(IExtratorContratoService::class, static function () {
+       return new ExtratorContratoService();
+   });
 
 // =====================
 // CONTROLLERS
 // =====================
 Container::set(ContratoController::class, static function () {
     return new ContratoController(
-        Container::get(IContratoService::class)
+        Container::get(IContratoService::class),
+        Container::get(IExtratorContratoService::class)
     );
 });

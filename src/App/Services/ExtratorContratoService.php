@@ -13,6 +13,7 @@ use Src\App\Models\Contrato;
 use Src\App\Services\IServices\IExtatorContratoService;
 use Throwable;
 use DateTime;
+use Override;
 use Src\App\Services\IServices\IExtratorContratoService;
 
 class ExtratorContratoService implements IExtratorContratoService
@@ -34,17 +35,59 @@ class ExtratorContratoService implements IExtratorContratoService
 
     public function extrair(string $caminhoPDF) : array
     {
-        /*if(!is_file($caminhoPDF) || !is_readable($caminhoPDF) ){
+        if(!is_file($caminhoPDF) || !is_readable($caminhoPDF) ){
              throw new ExtracaoContratoException('Arquivo não encontrado para extração.');
         }
         set_time_limit(300);
-        */
+        
+        $texto = $this->lerTexto($caminhoPDF);
+        $prompt = $this->montarPrompt($texto);
+        $json = $this->consultarModelo($prompt);
+        $dados = $this->decodificarJson($json);
+        $respostaNormalizada = $this->normalizar($dados);
 
-        return $a = [];
+        return $respostaNormalizada;
+    }
+
+    public function extrairDeUpload(array $arquivo): array
+    {
+        $tmp = $arquivo['tmp_name'] ?? '';
+        $destino = sys_get_temp_dir() . '/' . bin2hex(random_bytes(16)) . '.pdf';
+
+        if(!move_uploaded_file($tmp,$destino))
+        {
+            throw new ExtracaoContratoException('Não foi possível processar o arquivo.');
+        }
+        try {
+            return $this->extrair($destino);
+        } finally {
+             if (is_file($destino)) { unlink($destino); }
+        }
+
     }
 
 
-    public function lerTexto (string $caminhoPDF): string
+    private function normalizar(array $dados): array
+    {   
+        $resultado = [];
+        foreach(self::CAMPOS_TEXTO as $campo => $limite)
+        {
+            $resultado[$campo] = $this->paraTexto($dados[$campo] ?? null) ;
+            if($resultado[$campo] !== null)
+            {
+                $resultado[$campo] = mb_substr($resultado[$campo],0,$limite,'UTF-8');
+            }
+        }
+
+        foreach(self::CAMPOS_DATA as $campo)
+        {
+            $resultado[$campo] = $this->paraData($dados[$campo] ?? null) ;
+        }
+
+        return $resultado;
+    }
+
+    private function lerTexto (string $caminhoPDF): string
     {
        try
        {
@@ -75,7 +118,7 @@ class ExtratorContratoService implements IExtratorContratoService
 
     }
 
-    public function montarPrompt(string $textoContrato): string
+    private function montarPrompt(string $textoContrato): string
     {
         $prompt = <<<EOD
             Você é um assistente especializado em extração de dados de contratos administrativos.
@@ -113,7 +156,7 @@ class ExtratorContratoService implements IExtratorContratoService
         return $prompt;
     }
 
-    public function consultarModelo(string $prompt): string
+    private function consultarModelo(string $prompt): string
     {
         $config = new OllamaConfig();
         $config->model = self::MODELO;
@@ -132,7 +175,7 @@ class ExtratorContratoService implements IExtratorContratoService
         return $resposta;
     }
 
-    public function decodificarJson(string $resposta): array
+    private function decodificarJson(string $resposta): array
     {
 
         $texto = trim($resposta);
@@ -148,7 +191,7 @@ class ExtratorContratoService implements IExtratorContratoService
         return $respostaDados;
     }
 
-    public function paraTexto(mixed $valor): ?string 
+    private function paraTexto(mixed $valor): ?string 
     {
         if (!(is_string($valor) || is_int($valor) || is_float($valor)))
         {
@@ -168,7 +211,7 @@ class ExtratorContratoService implements IExtratorContratoService
         return $dado;
     }
 
-    public function paraData(mixed $valor): ?string
+    private function paraData(mixed $valor): ?string
     {
         $texto = $this->paraTexto($valor);
         if($texto === null)

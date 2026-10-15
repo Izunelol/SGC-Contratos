@@ -4,8 +4,11 @@ declare(strict_types=1);
 namespace Src\App\Http\Controllers;
 
 use Src\App\Http\Exceptions\Contrato\ContratoException;
+use Src\App\Http\Exceptions\ExtratorContrato\ExtracaoContratoException;
 use Src\App\Http\Requests\ContratoRequest;
+use Src\App\Http\Requests\ExtratorContratoRequest;
 use Src\App\Services\IServices\IContratoService;
+use Src\App\Services\IServices\IExtratorContratoService;
 use Src\App\Utils\Toast;
 use Src\App\Utils\Url;
 use Src\App\Utils\View;
@@ -14,7 +17,8 @@ use Src\Core\Logger;
 class ContratoController extends SharedController
 {
     public function __construct(
-        private IContratoService $contratoService
+        private IContratoService $contratoService,
+        private IExtratorContratoService $extratorService
     ) {
     }
 
@@ -42,11 +46,29 @@ class ContratoController extends SharedController
         }
     }
 
+    public function extrair(): never
+    {
+        $request = (new ExtratorContratoRequest($_POST))->redirectOnFail();
+
+        try {
+            $dados = $this->extratorService->extrairDeUpload($_FILES['arquivo']);
+
+            $_SESSION['old_input'] = $dados;
+            Toast::success('Confira os dados extraídos antes de salvar.');
+        } catch (ExtracaoContratoException $e) {
+            Toast::error($e->getMessage());
+            Logger::error($e->getMessage());
+        }
+
+        Url::redirect('/contrato/criar');
+    }
+
     public function criar(): string
     {
         $content = View::render('Contrato/criar', [
             'voltarUrl' => Url::path('/contrato'),
             'urlSalvar' => Url::path('/contrato/salvar'),
+            'urlExtrair' => Url::path('/contrato/extrair'),
         ]);
 
         return self::getPage('Contrato - NOVO REGISTRO', $content, [

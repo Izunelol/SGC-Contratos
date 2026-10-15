@@ -29,10 +29,8 @@ class ContratoService implements IContratoService
             'vigencia_inico' => $data['vigencia_inico'],
             'vigencia_fim' => $data['vigencia_fim'],
             'created_at' =>$agora,
-            'status' => $data['status'],
+            'status' => $data['status'] ?? true,
             'updated_at' => $agora,
-            
-            
         ]);
 
         return $this->repository->create($novo);

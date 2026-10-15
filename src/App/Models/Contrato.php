@@ -33,7 +33,7 @@ Class Contrato
         ?string $vigencia_fim = null,
         ?string $created_at = null,
         ?bool $status = null,
-        ?string $updated_at,
+        ?string $updated_at = null,
     )
     {
         $this->setId($id);
