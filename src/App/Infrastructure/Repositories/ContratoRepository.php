@@ -28,8 +28,8 @@ Class ContratoRepository implements IContratoRepository
         $stmt->bindValue(':id', $contrato->getId(), PDO::PARAM_STR);
         $stmt->bindValue(':fornecedor', $contrato->getFornecedor());
         $stmt->bindValue(':sei', $contrato->getSei());
-        $stmt->bindValue(':startGov', $contrato->getStartGov());
-        $stmt->bindValue(':contrato', $contrato->getContrato());
+        $stmt->bindValue(':startGov', $contrato->getStartGov(), PDO::PARAM_NULL);
+        $stmt->bindValue(':contrato', $contrato->getContrato(), PDO::PARAM_NULL);
         $stmt->bindValue(':objeto', $contrato->getObjeto());
         $stmt->bindValue(':vigencia_inico', $contrato->getVigencia_inico());
         $stmt->bindValue(':vigencia_fim', $contrato->getVigencia_fim());
