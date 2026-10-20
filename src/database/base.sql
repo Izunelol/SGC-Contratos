@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS `tb_exemplo`;
 DROP TABLE IF EXISTS `tb_usuarios`;
 DROP TABLE IF EXISTS `tb_perfis`;
 DROP TABLE IF EXISTS `tb_contrato`;
+DROP TABLE IF EXISTS `tb_extracao_fila`;
 
 -- 1. Perfis de usuário
 CREATE TABLE `tb_perfis` (
@@ -67,7 +68,6 @@ CREATE TABLE `tb_exemplo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `tb_contrato`(
-
   `id`              char(36) NOT NULL, 
   `fornecedor`      varchar(150) NOT NULL,
   `sei`             varchar(150) NOT NULL,
@@ -80,6 +80,23 @@ CREATE TABLE `tb_contrato`(
   `status`          tinyint(1) DEFAULT 1,
   `updated_at`      datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `tb_extracao_fila` (
+  `id`            CHAR(36)     NOT NULL,
+  `id_usuario_fk` CHAR(36)     NOT NULL,
+  `nome_original` VARCHAR(255) NOT NULL,
+  `caminho`       VARCHAR(150) NOT NULL,
+  `status`        VARCHAR(50)  NOT NULL DEFAULT 'pendente',
+  `resultado`     TEXT         NULL,
+  `erro`          VARCHAR(255) NULL,
+  `created_at`    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_extracao_status_created` (`status`, `created_at`),
+  CONSTRAINT `fk_extracao_usuario` FOREIGN KEY (`id_usuario_fk`)
+    REFERENCES `tb_usuarios` (`id`)
+    ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
